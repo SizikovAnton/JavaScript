@@ -1,0 +1,46 @@
+.board{
+    width: 450px;
+    height: 450px;
+    margin: 50px auto;
+    border-right: 1px solid #000;
+}
+
+.row{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cell-number{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 50px;
+    width: 50px;
+}
+
+.cell{
+    text-align: center;
+    height: 50px;
+    width: 50px;
+}
+
+.white{
+    background-color: #fff;
+}
+
+.black{
+    background-color: #000;
+}
+
+.border-left{
+    border-left: 1px solid #000;
+}
+
+.border-bottom{
+    border-bottom: 1px solid #000;
+}
+
+.border-top{
+    border-top: 1px solid #000;
+}
