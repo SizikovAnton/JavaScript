@@ -1,8 +1,7 @@
-.board{
+#board{
     width: 450px;
     height: 450px;
     margin: 50px auto;
-    border-right: 1px solid #000;
 }
 
 .row{
@@ -43,4 +42,8 @@
 
 .border-top{
     border-top: 1px solid #000;
+}
+
+.border-right{
+    border-right: 1px solid #000;
 }
