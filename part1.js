@@ -1,15 +1,18 @@
 var catalog = [
     {
+        id: 1,
         name: 'Item 1',
         price: 100,
         image: 'https://klike.net/uploads/posts/2018-10/1539499416_1.jpg'
     },
     {
+        id: 2,
         name: 'Item 2',
         price: 200,
         image: 'https://klike.net/uploads/posts/2018-10/1539499405_3.jpg'
     },
     {
+        id: 3,
         name: 'Item 3',
         price: 300,
         image: 'https://klike.net/uploads/posts/2018-10/1539499490_17.jpg'
@@ -18,23 +21,29 @@ var catalog = [
 
 var cart = [];
 
+/*var order = {
+    totalPrice: 0,
+    adress: null,
+    comment: null,
+}*/
 
 function addToCart(event) {
     if(cart.length) {
         for(var i = 0; i < cart.length; i++) {
-            if(cart[i].name == event.target.parentElement.dataset.name) {
+            if(cart[i].id == event.target.dataset.id) {
                 cart[i].quantity++;
-                return printCart(cart);
+                return printCartMini(cart);
             }
         }
     }
     var temp = {
-        name: event.target.parentElement.dataset.name,
+        id: event.target.dataset.id,
+        name: event.target.dataset.name,
         quantity: 1,
-        price: +event.target.parentElement.dataset.price,
+        price: +event.target.dataset.price,
     };
     cart.push(temp);
-    return printCart(cart);
+    return printCartMini(cart);
 }
 
 //Функция для подсчета общей стоимости корзины
@@ -46,8 +55,8 @@ function countBasketPrice(){
     return totalPrice;
 }
 
-function printCart(_cart){
-    var $cart = document.getElementById('cart');
+function printCart(_cart, editFlag = true, cartId = 'cart') {
+    var $cart = document.getElementById(cartId);
     var $status = document.createElement('div');
 
     $cart.innerHTML = '';
@@ -77,9 +86,59 @@ function printCart(_cart){
             $itemPrice.classList.add('item__section');
             $itemPrice.textContent = 'Итого: ' + (_cart[i].quantity * _cart[i].price) + 'р.';
             $item.appendChild($itemPrice);
+            if(editFlag) {
+                var $itemPlus = document.createElement('div');
+                $itemPlus.classList.add('item__section');
+                $itemPlus.innerHTML = '<i class="fas fa-plus-square"></i>';
+                $itemPlus.dataset.id = _cart[i].id;
+                $itemPlus.addEventListener('click', cartItemPlus);
+                $item.appendChild($itemPlus);
+
+                var $itemDelete = document.createElement('div');
+                $itemDelete.classList.add('item__section');
+                $itemDelete.innerHTML = '<i class="fas fa-minus-square"></i>';
+                $itemDelete.dataset.id = _cart[i].id;
+                $itemDelete.addEventListener('click', cartItemMinus);
+                $item.appendChild($itemDelete);
+            }
     
             $cart.appendChild($item);
     
+            totalCount += _cart[i].quantity;
+            totalPrice += _cart[i].quantity * _cart[i].price;
+        }
+    
+        $status.innerHTML = '<p> В корзине ' + totalCount + ' товаров на сумму ' + totalPrice + ' рублей.' + '</p>';
+    }
+    else{
+        $status.innerHTML = 'Корзина пуста.'
+    }
+
+    if(editFlag) {
+        var $button = document.createElement('button');
+        $button.classList.add('next');
+        $button.id = 'cartNext';
+        $button.textContent = 'Далее';
+        $cart.appendChild($button);
+        $button.addEventListener('click', nextButton);
+    }
+    
+}
+
+function printCartMini(_cart) {
+    var $cart = document.getElementById('cart-mini');
+    var $status = document.createElement('div');
+
+    $cart.innerHTML = '';
+
+    $status.classList.add('status');
+    $cart.appendChild($status);
+
+    if(_cart.length){
+        var totalPrice = null;
+        var totalCount = null;
+    
+        for(var i = 0; i < _cart.length; i++){
             totalCount += _cart[i].quantity;
             totalPrice += _cart[i].quantity * _cart[i].price;
         }
@@ -99,20 +158,26 @@ function buildCatalog(catalog) {
     for(var i = 0; i < catalog.length; i++) {
         var $item = $template.cloneNode(true);
         var keys = Object.keys(catalog[i]);
-        
+        var $itemButton = $item.querySelector('.product__addToCart');
+
         for(var j = 0; j < keys.length; j++) {
             var key = keys[j];
             var $element = $item.querySelector('.product__' + key);
-            if(key == 'image') {
-                $element.src = catalog[i][key];
-            }  
-            else if(key == 'price') {
-                $element.textContent = catalog[i][key] + ' р.';
-                $item.dataset.price = catalog[i][key];
-            }
-            else {
-                $element.textContent = catalog[i][key];
-                $item.dataset.name = catalog[i][key];
+            switch(key) {
+                case 'image':
+                    $element.src = catalog[i][key];
+                    break;
+                case 'price':
+                    $element.textContent = catalog[i][key] + ' р.';
+                    $itemButton.dataset.price = catalog[i][key];
+                    break;
+                case 'name':
+                    $element.textContent = catalog[i][key];
+                    $itemButton.dataset.name = catalog[i][key];
+                    break;
+                case 'id':
+                    $itemButton.dataset.id = catalog[i][key];
+                    break;
             }
         }
 
@@ -120,14 +185,101 @@ function buildCatalog(catalog) {
     }
 }
 
-function init(){
+function cartItemPlus(event) {
+    for(var i = 0; i < cart.length; i++) {
+        if(cart[i].id == +event.currentTarget.dataset.id) {
+            cart[i].quantity++;
+        }
+        printCart(cart);
+    }
+}
+
+function cartItemMinus(event) {
+    for(var i = 0; i < cart.length; i++) {
+        if(cart[i].id == +event.currentTarget.dataset.id) {
+            if(cart[i].quantity > 1) {
+                cart[i].quantity--;
+            }
+            else {
+                cart.splice(i, 1);
+            }
+        }
+    }
     printCart(cart);
+}
+
+function accordion() {
+    var panel = this.nextElementSibling;
+
+    displayPanel(panel);
+}
+
+function displayPanel($panel) {
+    if($panel.style.display == 'flex') {
+        $panel.style.display = 'none';
+    } 
+    else {
+        $panel.style.display = 'flex';
+    }
+}
+
+function nextButton() {
+    $button = this.id;
+
+    switch ($button) {
+        case 'cartNext':
+            displayPanel(document.getElementById('cart'));
+            displayPanel(document.getElementById('adressDiv'));
+            break;
+        case 'adressNext':
+            displayPanel(document.getElementById('adressDiv'));
+            displayPanel(document.getElementById('commentDiv'));
+            break;
+        case 'commentNext':
+            //displayPanel(document.getElementById('commentDiv'));
+            //displayPanel(document.getElementById('order'));
+            printOrder();
+            break;
+    }
+
+    //console.log($button);
+}
+
+function clickCart() {
+    this.style.display = 'none';
+    document.getElementById('cart-page').style.display = 'flex';
+    document.getElementById('catalog').style.display = 'none';
+    printCart(cart);
+    var $next = document.getElementsByClassName('next');
+    for(var i = 0; i < $next.length; i++) {
+        $next[i].addEventListener('click', nextButton);
+    }
+}
+
+function printOrder() {
+    document.getElementById('cart-page').style.display = 'none';
+    document.getElementById('order').style.display = 'block';
+    printCart(cart, false, 'order__cart');
+
+    document.getElementById('order__adress').textContent = document.getElementById('adress').value;
+    document.getElementById('order__comment').textContent = document.getElementById('comment').value;
+}
+
+function init(){
+    printCartMini(cart);
     buildCatalog(catalog);
 
     var $addToCart = document.getElementsByClassName('product__addToCart');
     for(var i = 0; i < $addToCart.length; i++) {
         $addToCart[i].addEventListener('click', addToCart);
     }
+
+    var $accordion = document.getElementsByClassName('accordion');
+    for(var i = 0; i < $accordion.length; i++) {
+        $accordion[i].addEventListener('click', accordion);
+    }
+
+    document.getElementById('cart-mini').addEventListener('click', clickCart);
 }
 
 window.addEventListener('load', init);

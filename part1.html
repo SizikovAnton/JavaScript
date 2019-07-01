@@ -4,13 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Домашнее задание 6</title>
+    <title>Домашнее задание 7</title>
     <link rel="stylesheet" href="part1.css">
     <script src="part1.js"></script>
+    <script src="https://kit.fontawesome.com/3cc71fbe09.js"></script>
 </head>
 <body>
-    <div class="cart" id="cart">
+    <div class="cart-mini" id="cart-mini">
+
     </div>
+
+    <div class="cart-page" id="cart-page" style="display: none">
+        <button class="accordion">Корзина</button>
+        <div class="cart" id="cart" style="display:flex">
+            <button class="next" id="cartNext">Далее</button>
+        </div>
+        
+        <button class="accordion">Адрес доставки</button>
+        <div class="adress" id="adressDiv">
+            <textarea name="" id="adress" cols="30" rows="10">Введите адрес доставки.</textarea>
+            <button class="next" id="adressNext">Далее</button>
+        </div>
+        
+        <button class="accordion">Комментарий</button>
+        <div class="comment" id="commentDiv">
+            <textarea name="" id="comment" cols="30" rows="10">Введите комментарий.</textarea>
+            <button class="next" id="commentNext">Оформить заказ</button>
+        </div>
+    </div>
+
+    <div class="order" id="order" style="display: none">
+        <p><b>Ваш заказ оформлен.</b></p>
+        <div id="order__cart" class="cart">
+        </div>
+        <div class="">
+            <p><b>Адрес доставки:</b></p>
+            <p id="order__adress"></p>
+        </div>
+        <div class="order__comment">
+            <p><b>Комментарий к заказу:</b></p>
+            <p id="order__comment"></p>
+        </div>
+    </div>
+    
     <div id="productTemplate" style="display: none">
         <div class="product">
             <img src="" alt="" class="product__image">
