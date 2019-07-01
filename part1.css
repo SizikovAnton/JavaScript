@@ -1,0 +1,94 @@
+.cart-page{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.cart, .adress, .comment{
+    width: 500px;
+    margin: 0 auto 40px auto;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.cart-mini{
+    border: 1px solid #000;
+    width: 500px;
+    margin: 0 auto 40px auto;
+    cursor: pointer;
+}
+.cart-mini:hover{
+    background-color: #ccc;
+}
+
+.adress, .comment{
+    display: none;
+}
+
+.next{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.accordion{
+    width: 500px;
+    height: 50px;
+    margin: 0 auto;
+}
+
+.status{
+    text-align: center;
+}
+
+.item{
+    display: flex;
+    justify-content: space-between;
+}
+
+.item__section{
+    width: 33%;
+    border-right: 1px dotted #000;
+    text-align: center;
+    margin-top: 10px;
+}
+.item__section:last-child{
+    border-right: none;
+}
+
+.catalog{
+    width: 600px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin: 50px auto;
+}
+
+.product{
+    width: 150px;
+    border: 1px solid #000;
+    height: 200px;
+    position: relative;
+    text-align: center;
+}
+.product__image{
+    height: 50%;
+}
+.product__addToCart{
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.order{
+    text-align: center;
+}
+
+.fas:hover{
+    color: red;
+    cursor: pointer;
+}
